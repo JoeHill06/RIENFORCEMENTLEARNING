@@ -16,7 +16,7 @@ class agent():
         '''Create a new agent with empty q state table'''
         self.q_table = {}
         self.alpha = 0.1
-        self.gamma = 0.0 # gets overwirtten in train.py
+        self.gamma = 0.9
         self.epsilon = 0.1
         self.token = None
     
@@ -130,18 +130,17 @@ class agent():
         # freeze the nested list of rows into a tuple of tuples.
         state = tuple(tuple(row) for row in board)
 
-        # Exploitation: walk every legal move, look up its Q-value (default
-        # 0.0 for unseen pairs), and keep the best. A manual loop is used
-        # instead of `max(..., key=...)` so ties resolve to the first move
-        # encountered - deterministic and easy to reason about.
-        best_move = possible[0]
-        best_value = self.q_table.get((state, best_move), 0.0)
-        for move in possible[1:]:
-            value = self.q_table.get((state, move), 0.0)
-            if value > best_value:
-                best_value = value
-                best_move = move
-
-        return best_move
+        # Exploitation: score every legal move, then argmax. Ties are
+        # broken RANDOMLY. Without this, unseen states (all Q = 0) always
+        # resolve to the lowest-indexed cell, so the demo would robotically
+        # open in the top-left every time it hits a state it never saw.
+        best_value = max(
+            self.q_table.get((state, move), 0.0) for move in possible
+        )
+        best_moves = [
+            move for move in possible
+            if self.q_table.get((state, move), 0.0) == best_value
+        ]
+        return random.choice(best_moves)
 
     
