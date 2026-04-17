@@ -46,8 +46,8 @@ Unseen pairs default to `0.0` — **optimistic initialization**, nudging the age
 
 ε-greedy policy:
 
-- With probability `ε` (`self.epsilon`, default `0.1`), pick a random legal move. This keeps exploration alive.
-- Otherwise, evaluate `Q(state, a)` for every legal `a` and pick the argmax. Ties are broken by first-seen, making behavior deterministic on repeated states.
+- With probability `ε` (`self.epsilon`), pick a random legal move. This keeps exploration alive.
+- Otherwise, evaluate `Q(state, a)` for every legal `a` and pick the argmax. Ties are broken **randomly** — without this, unseen states (where every candidate move has Q = 0) would always resolve to the lowest-indexed cell, so the agent would robotically open in the top-left every time it hit a state it never saw during training.
 
 ### The learning method — `update` (the heart of the algorithm)
 
@@ -142,7 +142,32 @@ The effect: every learner move eventually receives the correct reward for the st
 
 ### Alternating first-player
 
-Odd-numbered episodes the learner goes first; even-numbered episodes the opponent does. Without this, the agent would only ever see states consistent with first-player openings.
+Episodes alternate who opens. On even episodes the agent moves first into an empty board; on odd episodes the random opponent plays a single move *before* the main loop runs, so the agent's first decision is made from a board that already has one opposing piece on it.
+
+Without this, the Q-table only ever contains states consistent with first-player openings. The agent would then look perfectly competent in the "Agent first" demo button, and fall apart the moment a user clicked "You first" — because every post-user-move state would be unseen, and the argmax over all-zero Q-values would default to whatever tie-breaking rule happened to fire. Alternating guarantees both roles get coverage.
+
+One consequence worth noting: second-player states are harder. The branching factor is higher (the opponent's first move is one of nine, the agent's response then branches off each of those, etc.) so the same episode budget spreads more thinly over a larger slice of state-space. Expect training stats to report a single aggregate win-rate that averages a strong first-player slice and a weaker second-player slice.
+
+### Epsilon decay
+
+A fixed `ε` means the agent keeps exploring at the same rate forever — which is fine for convergence guarantees but wasteful in practice. Late in training, when the Q-values are mostly right, a 10% random move is just self-sabotage.
+
+`train.py` anneals `ε` **linearly** from `EPSILON_START = 1.0` down to `EPSILON_END = 0.05` over the first `DECAY_FRACTION = 0.8` of episodes:
+
+```python
+Agent1.epsilon = max(
+    EPSILON_END,
+    EPSILON_START - (EPSILON_START - EPSILON_END) * episode / DECAY_EPISODES,
+)
+```
+
+The schedule:
+
+- **Early episodes** (`ε ≈ 1.0`): effectively pure random play. The agent is building out the Q-table, visiting every corner of the state-space regardless of current estimates. You want this — if the agent committed to its first guess of a good move, it would re-play the same line forever and never learn that something else is better.
+- **Middle episodes**: `ε` falls linearly; exploration and exploitation mix. The agent increasingly plays its best current move while still occasionally deviating to discover alternatives.
+- **Final 20% of episodes** (`ε = 0.05`): near-greedy play. `clamp`-ing to `EPSILON_END` rather than decaying to 0 preserves a small amount of exploration so the agent can still patch gaps in states it has under-visited, but most updates now refine Q-values for the lines the agent actually cares about.
+
+This matters more than it looks. With a constant `ε = 0.1` the reported training win-rate against a random opponent caps somewhere in the low-80s. With decay, the same number of episodes ends the tail of training at a meaningfully higher win-rate because the final updates land on positions the agent is actually going to play.
 
 ### Reporting window
 
@@ -163,5 +188,4 @@ Because `ε = 0.1`: roughly 1 in 10 of the agent's moves is a coin flip, and a f
 ## Limitations and next steps
 
 - **Training opponent is dumb.** A random opponent cannot produce adversarial states, so the agent may have soft spots against any competent opponent. Self-play (two Q-learners against each other) is the standard next step.
-- **No epsilon decay.** A common improvement is linearly annealing `ε` from ~1.0 down to ~0.01 over training so early episodes explore aggressively and late episodes exploit.
 - **Table scale.** Tabular Q-learning works here because tic tac toe has at most a few thousand reachable states. For anything larger (connect four, checkers), function approximation — i.e. deep Q-learning — replaces the dict with a neural network. Beyond that other methods are used policy gradients, actor-critic, AlphaZero-style approaches. 
