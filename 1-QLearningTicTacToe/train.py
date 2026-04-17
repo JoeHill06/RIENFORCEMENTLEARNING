@@ -17,7 +17,7 @@ epochs = 20000
 # we've used DECAY_FRACTION of training. The tail (the remaining episodes)
 # runs at EPSILON_END so the agent spends the end of training refining the
 # Q-values it actually cares about instead of exploring.
-EPSILON_START   = Agent1.epsilon
+EPSILON_START   = 1.0
 EPSILON_END     = 0.05
 DECAY_FRACTION  = 0.8
 DECAY_EPISODES  = int(epochs * DECAY_FRACTION)
@@ -35,6 +35,18 @@ for episode in range(epochs):
 
     # Fresh game every episode - otherwise the board from the previous game would be used
     Game = game()
+
+    # Alternate who opens the episode. Without this the Q-table only ever
+    # sees "empty board, my turn" positions, so the agent has no idea what
+    # to do when an opponent has already moved (which is exactly what
+    # happens in the browser demo whenever the user clicks 'You first').
+    # On odd episodes, let the random opponent play once before the main
+    # loop starts; the loop below always runs agent-move-then-opponent.
+    if episode % 2 == 1:
+        opp_empty = [(i, j) for i in range(3) for j in range(3)
+                     if Game.board[i][j] == -1]
+        opp_i, opp_j = random.choice(opp_empty)
+        Game.move(opp_i, opp_j, OPPONENT_TOKEN)
 
     # Buffer for the DELAYED update. The agent's move can't be scored
     # until after the opponent responds (a move that sets up the opponent
