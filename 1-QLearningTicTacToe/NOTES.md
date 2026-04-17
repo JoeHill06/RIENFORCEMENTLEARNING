@@ -150,7 +150,7 @@ Every 100 episodes, the loop prints rolling win/loss/draw percentages and the cu
 
 ## Observed behaviour
 
-Running 5,000 episodes from scratch (seed 0):
+Running 10,000 episodes from scratch (seed 0):
 
 - Win-rate climbs from ~76% in the first hundred episodes to ~87% by episode 600.
 - After episode ~600 the curve plateaus — the bouncing between 83% and 90% is noise from ε-exploration, not continued learning.

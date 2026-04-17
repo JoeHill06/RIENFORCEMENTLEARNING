@@ -19,12 +19,12 @@ async function renderIndex() {
 }
 
 function projectCard(p) {
-  // Each card is a link to project.html?id=<slug>. Uses the shared design
-  // language from the sibling site: hairline card, monospace "arch" line,
-  // mint stat pill, muted bullet summary.
+  // Each card links to project.html?id=<slug>. Reuses the sibling site's
+  // `.network-card` design: hairline card, monospace "arch" line, mint
+  // accuracy pill, muted techniques summary.
   const techniques = (p.bullets || []).join(" · ");
   return `
-    <a class="project-card" href="project.html?id=${encodeURIComponent(p.id)}">
+    <a class="network-card" href="project.html?id=${encodeURIComponent(p.id)}">
       <h2>${p.number}. ${escapeHtml(p.title)}</h2>
       <div class="arch">${escapeHtml(p.summary)}</div>
       <div class="desc">${escapeHtml(p.description)}</div>
@@ -63,7 +63,7 @@ async function renderProject() {
     .map(p => `<li>${escapeHtml(p)}</li>`).join("");
 
   document.getElementById("project-detail").innerHTML = `
-    <section class="project-meta">
+    <section class="network-meta">
       <h1>${info.number}. ${escapeHtml(info.title)}</h1>
       <div class="arch">${escapeHtml(info.summary)}</div>
       <div class="result-summary">${escapeHtml(info.description)}</div>

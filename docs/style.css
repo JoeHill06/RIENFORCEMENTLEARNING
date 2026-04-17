@@ -41,15 +41,15 @@ a:hover { text-decoration: underline; }
   padding: 2rem 1.5rem 4rem;
 }
 
-/* ── Landing page: project cards ──────────────────────────────────────────── */
-.project-grid {
+/* ── Landing page: network cards ──────────────────────────────────────────── */
+.network-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
   margin-top: 1.5rem;
 }
 
-.project-card {
+.network-card {
   display: block;
   background: #fff;
   border: 1px solid #e5e7eb;
@@ -59,29 +59,29 @@ a:hover { text-decoration: underline; }
   text-decoration: none;
   color: inherit;
 }
-.project-card:hover {
+.network-card:hover {
   border-color: #2563eb;
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
   text-decoration: none;
 }
-.project-card h2 {
+.network-card h2 {
   font-size: 1.1rem;
   font-weight: 600;
   color: #111;
   margin-bottom: 0.3rem;
 }
-.project-card .arch {
+.network-card .arch {
   font-family: 'SFMono-Regular', Consolas, monospace;
   font-size: 0.82rem;
   color: #666;
   margin-bottom: 0.5rem;
 }
-.project-card .desc {
+.network-card .desc {
   font-size: 0.88rem;
   color: #555;
   margin-bottom: 0.5rem;
 }
-.project-card .accuracy {
+.network-card .accuracy {
   display: inline-block;
   background: #ecfdf5;
   color: #065f46;
@@ -90,40 +90,40 @@ a:hover { text-decoration: underline; }
   padding: 0.2rem 0.6rem;
   border-radius: 12px;
 }
-.project-card .techniques {
+.network-card .techniques {
   font-size: 0.8rem;
   color: #888;
   margin-top: 0.4rem;
 }
 
-/* ── Project page layout ──────────────────────────────────────────────────── */
-.project-page-body {
+/* ── Network page layout ──────────────────────────────────────────────────── */
+.network-page-body {
   max-width: 1100px;
   margin: 0 auto;
   padding: 1.5rem 1.5rem 4rem;
 }
 
-.project-meta {
+.network-meta {
   margin-bottom: 1.5rem;
 }
-.project-meta h1 {
+.network-meta h1 {
   font-size: 1.5rem;
   font-weight: 600;
   color: #111;
 }
-.project-meta .arch {
+.network-meta .arch {
   font-family: 'SFMono-Regular', Consolas, monospace;
   font-size: 0.88rem;
   color: #666;
   margin-top: 0.25rem;
 }
-.project-meta .result-summary {
+.network-meta .result-summary {
   font-size: 0.88rem;
   color: #555;
   margin-top: 0.35rem;
 }
 
-/* ── Try-it widget ────────────────────────────────────────────────────────── */
+/* Try-it widget */
 .try-it-section {
   background: #f9fafb;
   border: 1px solid #e5e7eb;
@@ -151,17 +151,26 @@ a:hover { text-decoration: underline; }
   gap: 0.6rem;
   flex-shrink: 0;
 }
-.try-it-right {
-  flex: 1;
-  min-width: 0;
+.canvas-wrapper {
+  border: 2px solid #d1d5db;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
 }
-
-.try-it-hint {
+#draw-canvas {
+  display: block;
+  cursor: crosshair;
+  touch-action: none;
+}
+.canvas-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+.canvas-hint {
   font-size: 0.78rem;
   color: #999;
 }
 
-/* ── Buttons ─────────────────────────────────────────────────────────────── */
 button {
   padding: 0.45rem 1.1rem;
   border-radius: 6px;
@@ -172,11 +181,9 @@ button {
   cursor: pointer;
   transition: background 0.12s, border-color 0.12s;
   color: #333;
-  font-family: inherit;
 }
 button:hover { background: #f3f4f6; border-color: #bbb; }
 button:active { transform: scale(0.98); }
-button:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .btn-primary {
   background: #2563eb;
@@ -186,24 +193,357 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .btn-primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
 .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.btn-row {
-  display: flex;
-  gap: 0.5rem;
+.try-it-right {
+  flex: 1;
+  min-width: 0;
+}
+.prediction-display {
+  text-align: center;
+  padding: 0.5rem 0;
+}
+.prediction-label { color: #999; font-size: 0.88rem; }
+.prediction-number {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #111;
+  line-height: 1.1;
+}
+.prediction-conf {
+  font-size: 0.82rem;
+  color: #666;
+  margin-top: 0.2rem;
 }
 
-/* ── Tic Tac Toe board ───────────────────────────────────────────────────── */
+#bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 0.5rem;
+}
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+}
+.bar-digit {
+  width: 14px;
+  text-align: right;
+  color: #888;
+  font-family: monospace;
+  flex-shrink: 0;
+}
+.bar-track {
+  flex: 1;
+  background: #e5e7eb;
+  border-radius: 3px;
+  height: 14px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: #93c5fd;
+  transition: width 0.3s ease;
+}
+.bar-fill.top { background: #2563eb; }
+.bar-pct {
+  width: 40px;
+  text-align: right;
+  color: #888;
+  font-family: monospace;
+  flex-shrink: 0;
+}
+
+/* ── Notebook container ───────────────────────────────────────────────────── */
+.nb-container {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.nb-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.5rem 1rem;
+  gap: 0.75rem;
+}
+.nb-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+}
+.nb-top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.nb-kernel-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: #666;
+}
+.nb-kernel-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #d1d5db;
+  border: 1px solid #aaa;
+  transition: background 0.3s;
+}
+.nb-kernel-dot.idle   { background: #34d399; border-color: #059669; }
+.nb-kernel-dot.busy   { background: #fbbf24; border-color: #d97706; }
+.nb-kernel-dot.error  { background: #f87171; border-color: #dc2626; }
+
+.nb-toolbar-btn {
+  background: #fff;
+  color: #555;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.nb-toolbar-btn:hover { background: #f3f4f6; color: #333; }
+
+/* ── Notebook cells ───────────────────────────────────────────────────────── */
+#notebook-render {
+  padding: 0.4rem 0;
+}
+
+/* Markdown cell */
+.nb-md-cell {
+  padding: 0.6rem 1rem 0.6rem 4.5rem;
+  border-left: 3px solid transparent;
+  line-height: 1.7;
+  color: #333;
+  font-size: 0.92rem;
+}
+.nb-md-cell:hover { border-left-color: #e5e7eb; }
+.nb-md-cell h1 {
+  font-size: 1.6rem;
+  color: #111;
+  margin: 0.5rem 0 0.4rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.3rem;
+}
+.nb-md-cell h2 {
+  font-size: 1.3rem;
+  color: #111;
+  margin: 1rem 0 0.4rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.2rem;
+}
+.nb-md-cell h3 { font-size: 1.1rem; color: #111; margin: 0.8rem 0 0.3rem; }
+.nb-md-cell p  { margin-bottom: 0.6rem; }
+.nb-md-cell ul, .nb-md-cell ol { padding-left: 1.5rem; margin-bottom: 0.6rem; }
+.nb-md-cell li { margin-bottom: 0.2rem; }
+.nb-md-cell code {
+  background: #f3f4f6;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.88em;
+  color: #c7254e;
+}
+.nb-md-cell pre {
+  background: #f3f4f6;
+  padding: 0.8rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin-bottom: 0.6rem;
+}
+.nb-md-cell pre code { background: none; color: #333; }
+.nb-md-cell table { border-collapse: collapse; margin: 0.5rem 0; font-size: 0.88rem; }
+.nb-md-cell th, .nb-md-cell td { border: 1px solid #e5e7eb; padding: 0.35rem 0.7rem; }
+.nb-md-cell th { background: #f9fafb; font-weight: 600; }
+.nb-md-cell strong { font-weight: 700; }
+.nb-md-cell em { font-style: italic; }
+
+/* Code cell */
+.nb-code-cell {
+  border-left: 3px solid transparent;
+  margin: 0.2rem 0;
+}
+.nb-code-cell:hover { border-left-color: #e5e7eb; }
+.nb-code-cell.selected { border-left-color: #2563eb; }
+.nb-code-cell.running  { border-left-color: #f59e0b; }
+
+.nb-input-area {
+  display: flex;
+  align-items: flex-start;
+  padding: 0.25rem 0.5rem 0.25rem 0;
+}
+
+.nb-in-prompt {
+  width: 4.5rem;
+  flex-shrink: 0;
+  text-align: right;
+  padding: 0.4rem 0.5rem 0 0;
+  font-size: 0.78rem;
+  font-family: monospace;
+  color: #2563eb;
+  user-select: none;
+}
+
+.nb-editor {
+  flex: 1;
+  font-family: 'SFMono-Regular', Consolas, 'Courier New', monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #333;
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 3px;
+  padding: 0.5rem 0.6rem;
+  resize: none;
+  overflow: hidden;
+  min-height: 2.4rem;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+.nb-editor:focus {
+  border-color: #2563eb;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.nb-run-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: #bbb;
+  font-size: 0.95rem;
+  padding: 0.4rem 0.4rem;
+  cursor: pointer;
+  margin-left: 0.2rem;
+  border-radius: 4px;
+  line-height: 1;
+}
+.nb-run-btn:hover { color: #2563eb; background: #f3f4f6; }
+
+/* Output area */
+.nb-output-area {
+  display: flex;
+  align-items: flex-start;
+  padding: 0 0.5rem 0 0;
+  min-height: 0;
+}
+.nb-out-prompt {
+  width: 4.5rem;
+  flex-shrink: 0;
+  text-align: right;
+  padding: 0.4rem 0.5rem 0 0;
+  font-size: 0.78rem;
+  font-family: monospace;
+  color: #dc2626;
+  user-select: none;
+}
+.nb-output-content {
+  flex: 1;
+  padding: 0.15rem 0 0.35rem;
+}
+
+.nb-stdout {
+  font-family: monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #333;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  background: none;
+  border: none;
+  padding: 0.15rem 0;
+}
+
+.nb-error-text {
+  font-family: monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #dc2626;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  padding: 0.35rem 0.6rem;
+  background: #fef2f2;
+  border-left: 3px solid #f87171;
+  border-radius: 0 3px 3px 0;
+}
+
+.nb-running-text {
+  font-size: 0.8rem;
+  color: #999;
+  font-style: italic;
+  padding: 0.25rem 0;
+}
+
+.nb-plot-img {
+  max-width: 100%;
+  display: block;
+  margin: 0.3rem 0;
+}
+
+/* Cell dividers */
+.nb-code-cell + .nb-code-cell,
+.nb-md-cell + .nb-code-cell,
+.nb-code-cell + .nb-md-cell {
+  border-top: 1px solid #f3f4f6;
+}
+
+/* ── Notes section ────────────────────────────────────────────────────────── */
+.notes-section {
+  margin-bottom: 2rem;
+}
+.notes-section h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.notes-body {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #444;
+}
+.notes-body h1 { font-size: 1.15rem; color: #111; margin-bottom: 0.5rem; }
+.notes-body h2 { font-size: 1rem; color: #111; margin: 1rem 0 0.4rem; }
+.notes-body h3 { font-size: 0.92rem; color: #333; margin: 0.8rem 0 0.3rem; }
+.notes-body p { margin-bottom: 0.6rem; }
+.notes-body ul, .notes-body ol { padding-left: 1.4rem; margin-bottom: 0.6rem; }
+.notes-body li { margin-bottom: 0.2rem; }
+.notes-body code {
+  background: #f3f4f6;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  font-size: 0.85em;
+  color: #c7254e;
+}
+.notes-body em { font-style: italic; color: #555; }
+
+/* ── Tic Tac Toe board (sits inside .try-it-left where the MNIST canvas
+ *    would go; uses the same card/border language as .canvas-wrapper) ─── */
 .ttt-wrapper {
   border: 2px solid #d1d5db;
   border-radius: 8px;
   overflow: hidden;
-  background: #e5e7eb;
+  background: #d1d5db;
 }
 .ttt-board {
   display: grid;
   grid-template-columns: repeat(3, 84px);
   grid-template-rows:    repeat(3, 84px);
   gap: 2px;
-  background: #d1d5db;
 }
 .ttt-cell {
   background: #fff;
@@ -238,61 +578,13 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .ttt-status.loss { color: #991b1b; font-weight: 600; }
 .ttt-status.draw { color: #666;    font-weight: 600; }
 
-/* ── Notes section ────────────────────────────────────────────────────────── */
-.notes-section {
-  margin-bottom: 2rem;
-}
-.notes-section h2 {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-.notes-body {
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: #444;
-}
-.notes-body h1 { font-size: 1.15rem; color: #111; margin-bottom: 0.5rem; }
-.notes-body h2 { font-size: 1rem; color: #111; margin: 1rem 0 0.4rem; }
-.notes-body h3 { font-size: 0.92rem; color: #333; margin: 0.8rem 0 0.3rem; }
-.notes-body p  { margin-bottom: 0.6rem; }
-.notes-body ul, .notes-body ol { padding-left: 1.4rem; margin-bottom: 0.6rem; }
-.notes-body li { margin-bottom: 0.2rem; }
-.notes-body code {
-  background: #f3f4f6;
-  padding: 0.1em 0.35em;
-  border-radius: 3px;
-  font-family: 'SFMono-Regular', Consolas, monospace;
-  font-size: 0.85em;
-  color: #c7254e;
-}
-.notes-body pre {
-  background: #f3f4f6;
-  padding: 0.7rem 0.9rem;
-  border-radius: 4px;
-  overflow-x: auto;
-  margin-bottom: 0.7rem;
-  font-family: 'SFMono-Regular', Consolas, monospace;
-  font-size: 0.82rem;
-  color: #333;
-}
-.notes-body pre code {
-  background: none;
-  color: #333;
-  padding: 0;
-  font-size: inherit;
-}
-.notes-body em { font-style: italic; color: #555; }
-.notes-body strong { font-weight: 700; color: #222; }
-
 /* ── Responsive ───────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
-  .page-body, .project-page-body { padding: 1rem; }
+  .page-body, .network-page-body { padding: 1rem; }
   .try-it-layout { flex-direction: column; align-items: center; }
   .try-it-right { width: 100%; }
+  .nb-in-prompt, .nb-out-prompt { width: 3rem; font-size: 0.7rem; }
+  .nb-md-cell { padding-left: 3rem; }
   .ttt-board {
     grid-template-columns: repeat(3, 72px);
     grid-template-rows:    repeat(3, 72px);
