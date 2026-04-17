@@ -1,0 +1,20 @@
+{
+  "title": "Reinforcement Learning",
+  "subtitle": "RL agents built from scratch - explore the code and play each one live",
+  "projects": [
+    {
+      "id": "1-qlearning-tic-tac-toe",
+      "number": 1,
+      "title": "Q-Learning Tic Tac Toe",
+      "summary": "tabular Q-learning -> dict[(state, action)] -> Bellman update",
+      "description": "A tabular Q-learner that picks moves via epsilon-greedy over a dict mapping (state, action) to estimated value. Trained against a uniformly-random opponent for 5,000 episodes. States are frozen 3x3 board snapshots; actions are (row, col) coordinates.",
+      "headline_stat": "92% win rate",
+      "bullets": [
+        "alpha=0.1 learning rate - how aggressively new estimates override old",
+        "gamma=0.9 discount - values future reward 0.9x per step",
+        "epsilon=0.1 exploration - 1 in 10 moves is random, keeping coverage alive",
+        "1134 (state, action) pairs in the Q-table - full coverage of reachable positions"
+      ]
+    }
+  ]
+}

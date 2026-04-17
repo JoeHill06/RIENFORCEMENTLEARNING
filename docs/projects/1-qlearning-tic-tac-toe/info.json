@@ -1,0 +1,41 @@
+{
+  "id": "1-qlearning-tic-tac-toe",
+  "number": 1,
+  "title": "Q-Learning Tic Tac Toe",
+  "summary": "tabular Q-learning -> dict[(state, action)] -> Bellman update",
+  "description": "A tabular Q-learner that picks moves via epsilon-greedy over a dict mapping (state, action) to estimated value. Trained against a uniformly-random opponent for 5,000 episodes. States are frozen 3x3 board snapshots; actions are (row, col) coordinates. No neural network - just a Python dict and the Bellman update rule.",
+  "demo": {
+    "type": "tic-tac-toe",
+    "q_table_path": "projects/1-qlearning-tic-tac-toe/q_table.json",
+    "agent_token": "X",
+    "user_token": "O",
+    "caption": "You play O, the trained agent plays X. Click a cell to move."
+  },
+  "notes": {
+    "paragraphs": [
+      "The agent keeps a dictionary keyed by (state, action) pairs where the state is the 3x3 board frozen into a tuple of tuples and the action is the (row, col) of the move. Each entry is the agent's current estimate of the discounted future reward from taking that action in that state and then playing optimally from there on.",
+      "Training alternates the learner and a uniformly-random opponent. Because a move's true reward only becomes visible after the opponent responds, the loop buffers each (state, action) and applies the Bellman update one turn later - otherwise a move that set up the opponent to win would be silently rewarded with 0."
+    ]
+  },
+  "learning_method": {
+    "title": "The update rule",
+    "formula": "Q(s, a) <- Q(s, a) + alpha * [r + gamma * max_a' Q(s', a') - Q(s, a)]",
+    "points": [
+      "alpha (learning rate) controls how much the new estimate overrides the old",
+      "gamma (discount) shrinks the value of rewards that are further in the future",
+      "max over a' is what makes Q-learning off-policy: the target assumes optimal future play, not the policy actually being followed",
+      "on a terminal transition the future term is forced to 0 because no reward remains"
+    ]
+  },
+  "what_i_learned": [
+    "Tabular Q-learning is just a dict - no neural network needed when the state space is small enough.",
+    "The delayed-update pattern is non-obvious but essential: reward depends on the opponent's response, so updates have to be buffered by one turn.",
+    "epsilon-greedy caps the observed win-rate (10% random moves -> ~90% ceiling), so always evaluate separately with epsilon=0 to see the real policy.",
+    "Off-policy updates use max over next-state actions, not the action actually taken - this is why Q-learning can learn the optimal policy even while exploring randomly."
+  ],
+  "things_to_try_next": [
+    "Self-play: train two Q-learners against each other instead of vs random. Random opponents produce weak adversarial states.",
+    "Epsilon decay: linearly anneal exploration from 1.0 down to 0.01 so early episodes explore broadly and late episodes exploit.",
+    "Move to Connect Four or a larger board where tabular storage breaks and function approximation (deep Q-learning) becomes necessary."
+  ]
+}

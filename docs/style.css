@@ -1,0 +1,301 @@
+/* -----------------------------------------------------------------------
+ * Reinforcement Learning - project site
+ * Styled to echo the screenshot reference: black-on-off-white, serif title,
+ * system sans-serif body, monospace for algorithm summaries and keys.
+ * --------------------------------------------------------------------- */
+
+:root {
+  --bg:       #fafaf8;
+  --ink:      #1a1a1a;
+  --muted:    #666;
+  --line:     #e4e4e0;
+  --panel:    #ffffff;
+  --accent:   #d4ebdc;
+  --accent-ink: #1f5a34;
+  --hover:    #f0efeb;
+  --x-color:  #1a1a1a;
+  --o-color:  #b04a4a;
+  --win:      #fff6c2;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 56px 32px 96px;
+}
+
+/* --------------------------- Index page ------------------------------ */
+
+.page-header h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin: 0 0 40px;
+  font-size: 15px;
+}
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.project-card {
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--line);
+}
+.project-card:last-child {
+  border-bottom: none;
+}
+
+.project-card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  letter-spacing: -0.005em;
+}
+
+.project-card h2 a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.project-card h2 a:hover {
+  text-decoration: underline;
+}
+
+.summary {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 13px;
+  color: #3366aa;
+  margin: 0 0 10px;
+  word-break: break-word;
+}
+
+.description {
+  margin: 0 0 12px;
+  color: var(--ink);
+}
+
+.stat-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.bullets {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bullets li {
+  padding: 2px 0;
+}
+
+.bullets code {
+  background: var(--line);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  color: var(--ink);
+}
+
+/* --------------------------- Project page ----------------------------- */
+
+.back-link {
+  display: inline-block;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+.back-link:hover {
+  color: var(--ink);
+}
+
+#project-detail h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 26px;
+  margin: 0 0 8px;
+}
+
+#project-detail .summary {
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+#project-detail .description {
+  margin-bottom: 32px;
+}
+
+.section-heading {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 32px 0 10px;
+}
+
+.notes p {
+  margin: 0 0 12px;
+}
+
+.learning-method {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 8px 0 16px;
+}
+.learning-method .formula {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 13px;
+  background: var(--hover);
+  padding: 10px 12px;
+  border-radius: 4px;
+  margin: 8px 0 14px;
+  overflow-x: auto;
+}
+
+.learning-method ul,
+.list-block ul {
+  margin: 0;
+  padding-left: 20px;
+}
+.learning-method li,
+.list-block li {
+  margin-bottom: 6px;
+}
+
+/* --------------------------- Try-it demo ------------------------------ */
+
+.try-it {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 24px;
+  margin: 10px 0 20px;
+}
+
+.try-it-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+}
+
+.try-it-header h3 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+
+.try-it-caption {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0;
+}
+
+.demo-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+#status {
+  font-size: 14px;
+  color: var(--muted);
+  min-height: 20px;
+}
+#status.win  { color: var(--accent-ink); font-weight: 600; }
+#status.loss { color: var(--o-color);     font-weight: 600; }
+#status.draw { color: var(--muted);       font-weight: 600; }
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 84px);
+  grid-template-rows:    repeat(3, 84px);
+  gap: 4px;
+  background: var(--line);
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.cell {
+  background: var(--panel);
+  border: none;
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, serif;
+  transition: background 120ms;
+  border-radius: 2px;
+}
+.cell:hover:not(:disabled) {
+  background: var(--hover);
+}
+.cell:disabled {
+  cursor: default;
+}
+.cell.x { color: var(--x-color); }
+.cell.o { color: var(--o-color); }
+.cell.winning {
+  background: var(--win);
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn:hover { background: var(--hover); }
+.btn.primary {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+.btn.primary:hover { background: #000; }
