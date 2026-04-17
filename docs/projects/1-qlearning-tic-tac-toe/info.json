@@ -3,7 +3,7 @@
   "number": 1,
   "title": "Q-Learning Tic Tac Toe",
   "summary": "tabular Q-learning -> dict[(state, action)] -> Bellman update",
-  "description": "A tabular Q-learner that picks moves via epsilon-greedy over a dict mapping (state, action) to estimated value. Trained against a uniformly-random opponent for 5,000 episodes. States are frozen 3x3 board snapshots; actions are (row, col) coordinates. No neural network - just a Python dict and the Bellman update rule.",
+  "description": "A tabular Q-learner that picks moves via epsilon-greedy over a dict mapping (state, action) to estimated value. Trained against a uniformly-random opponent for 10,000 episodes. States are frozen 3x3 board snapshots; actions are (row, col) coordinates. No neural network - just a Python dict and the Bellman update rule.",
   "demo": {
     "type": "tic-tac-toe",
     "q_table_path": "projects/1-qlearning-tic-tac-toe/q_table.json",
