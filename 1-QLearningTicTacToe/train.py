@@ -9,12 +9,30 @@ Agent1 = agent()
 Agent1.token = 1         # cross
 OPPONENT_TOKEN = 0       # naught
 
-epochs = 10000
+
+epochs = 20000
+
+# ---- epsilon decay schedule ----
+# Start fully random, decay linearly down to a small residual by the time
+# we've used DECAY_FRACTION of training. The tail (the remaining episodes)
+# runs at EPSILON_END so the agent spends the end of training refining the
+# Q-values it actually cares about instead of exploring.
+EPSILON_START   = Agent1.epsilon
+EPSILON_END     = 0.05
+DECAY_FRACTION  = 0.8
+DECAY_EPISODES  = int(epochs * DECAY_FRACTION)
 
 # Rolling counts so we can see the agent improving over time.
 wins = losses = draws = 0
 
 for episode in range(epochs):
+    # Linear epsilon decay. `max` clamps to EPSILON_END once we're past
+    # the decay window, so the tail of training is almost pure exploitation.
+    Agent1.epsilon = max(
+        EPSILON_END,
+        EPSILON_START - (EPSILON_START - EPSILON_END) * episode / DECAY_EPISODES,
+    )
+
     # Fresh game every episode - otherwise the board from the previous game would be used
     Game = game()
 

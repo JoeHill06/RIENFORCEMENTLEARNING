@@ -15,9 +15,9 @@ class agent():
     def __init__(self):
         '''Create a new agent with empty q state table'''
         self.q_table = {}
-        self.alpha = 0.1
+        self.alpha = 0.2
         self.gamma = 0.9
-        self.epsilon = 0.1
+        self.epsilon = 0.5
         self.token = None
     
     def update(self, board, action, reward, next_board, done=False):
