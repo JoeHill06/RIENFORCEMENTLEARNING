@@ -12,10 +12,7 @@
     "caption": "You play O, the trained agent plays X. Click a cell to move."
   },
   "notes": {
-    "paragraphs": [
-      "The agent keeps a dictionary keyed by (state, action) pairs where the state is the 3x3 board frozen into a tuple of tuples and the action is the (row, col) of the move. Each entry is the agent's current estimate of the discounted future reward from taking that action in that state and then playing optimally from there on.",
-      "Training alternates the learner and a uniformly-random opponent. Because a move's true reward only becomes visible after the opponent responds, the loop buffers each (state, action) and applies the Bellman update one turn later - otherwise a move that set up the opponent to win would be silently rewarded with 0."
-    ]
+    "markdown_path": "projects/1-qlearning-tic-tac-toe/notes.md"
   },
   "learning_method": {
     "title": "The update rule",

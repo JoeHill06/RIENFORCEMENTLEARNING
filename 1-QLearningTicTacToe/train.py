@@ -150,3 +150,12 @@ with (out_dir / "q_table.json").open("w") as f:
     json.dump(serialized, f)
 
 print(f"saved {len(serialized)} q-values to {out_dir / 'q_table.json'}")
+
+# Mirror NOTES.md into the docs site so the project page can fetch the
+# latest notes without an extra build step. Keeping a copy (instead of a
+# symlink) so GitHub Pages serves it reliably.
+notes_src = Path(__file__).parent / "NOTES.md"
+notes_dst = out_dir / "notes.md"
+if notes_src.exists():
+    notes_dst.write_text(notes_src.read_text())
+    print(f"copied notes to {notes_dst}")

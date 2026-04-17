@@ -53,8 +53,14 @@ async function renderProject() {
   const learningPoints = (learning?.points || [])
     .map(p => `<li>${escapeHtml(p)}</li>`).join("");
 
-  const notes = (info.notes?.paragraphs || [])
-    .map(p => `<p>${escapeHtml(p)}</p>`).join("");
+  // Notes can either be inline `paragraphs` in info.json, or a path to a
+  // markdown file that we fetch and render client-side. The markdown path
+  // wins if both are set.
+  const notesMarkdownPath = info.notes?.markdown_path;
+  const notesParagraphs = notesMarkdownPath
+    ? ""
+    : (info.notes?.paragraphs || [])
+        .map(p => `<p>${escapeHtml(p)}</p>`).join("");
 
   const learned = (info.what_i_learned || [])
     .map(p => `<li>${escapeHtml(p)}</li>`).join("");
@@ -95,12 +101,17 @@ async function renderProject() {
       </div>
     </section>
 
-    ${notes ? `
+    ${notesMarkdownPath ? `
       <section class="notes-section">
         <h2>Notes</h2>
-        <div class="notes-body">${notes}</div>
+        <div class="notes-body" id="notes-markdown">loading notes...</div>
       </section>
-    ` : ""}
+    ` : (notesParagraphs ? `
+      <section class="notes-section">
+        <h2>Notes</h2>
+        <div class="notes-body">${notesParagraphs}</div>
+      </section>
+    ` : "")}
 
     ${learning && learningPoints ? `
       <section class="notes-section">
@@ -127,8 +138,42 @@ async function renderProject() {
     ` : ""}
   `;
 
+  if (notesMarkdownPath) {
+    await renderMarkdownNotes(notesMarkdownPath);
+  }
+
   if (info.demo?.type === "tic-tac-toe") {
     await initTicTacToeDemo(info.demo);
+  }
+}
+
+// Fetch a markdown file, render it with marked, and run KaTeX over the
+// result so the Bellman-update equation displays properly. marked/KaTeX
+// are loaded via <script defer> in project.html, so they may not be ready
+// when this function first runs - wait for DOMContentLoaded to be safe.
+async function renderMarkdownNotes(path) {
+  if (document.readyState === "loading") {
+    await new Promise(r =>
+      document.addEventListener("DOMContentLoaded", r, { once: true })
+    );
+  }
+  const container = document.getElementById("notes-markdown");
+  if (!container) return;
+
+  try {
+    const md = await (await fetch(path)).text();
+    container.innerHTML = window.marked.parse(md);
+    if (window.renderMathInElement) {
+      window.renderMathInElement(container, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$",  right: "$",  display: false },
+        ],
+        throwOnError: false,
+      });
+    }
+  } catch (err) {
+    container.textContent = `Failed to load notes: ${err}`;
   }
 }
 
