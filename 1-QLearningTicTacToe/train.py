@@ -9,7 +9,7 @@ Agent1 = agent()
 Agent1.token = 1         # cross
 OPPONENT_TOKEN = 0       # naught
 
-epochs = 5000
+epochs = 10000
 
 # Rolling counts so we can see the agent improving over time.
 wins = losses = draws = 0
