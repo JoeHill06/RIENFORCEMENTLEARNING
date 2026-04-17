@@ -1,39 +1,36 @@
 /* -----------------------------------------------------------------------
  * Reinforcement Learning - site script
- * One file used by both pages. `renderIndex()` runs on the project list,
- * `renderProject()` runs on the detail page (which hosts the interactive
- * Q-learning tic tac toe demo).
+ * One file, two entry points. `renderIndex()` runs on the landing page;
+ * `renderProject()` runs on the detail page and hosts the interactive
+ * Q-learning tic tac toe demo.
  * --------------------------------------------------------------------- */
 
 /* ============================ INDEX PAGE ============================= */
 
 async function renderIndex() {
-  // The registry is the single source of truth for which projects exist.
-  const res = await fetch("projects/registry.json");
-  const registry = await res.json();
+  // Registry is the single source of truth for which projects exist.
+  const registry = await (await fetch("projects/registry.json")).json();
 
   document.getElementById("site-title").textContent = registry.title;
   document.getElementById("site-subtitle").textContent = registry.subtitle;
 
-  const listEl = document.getElementById("project-list");
-  listEl.innerHTML = registry.projects.map(projectCard).join("");
+  const gridEl = document.getElementById("project-grid");
+  gridEl.innerHTML = registry.projects.map(projectCard).join("");
 }
 
 function projectCard(p) {
-  // One card per project - title links to the detail page with ?id=<slug>.
-  const bullets = (p.bullets || []).map(b => `<li>${escapeHtml(b)}</li>`).join("");
+  // Each card is a link to project.html?id=<slug>. Uses the shared design
+  // language from the sibling site: hairline card, monospace "arch" line,
+  // mint stat pill, muted bullet summary.
+  const techniques = (p.bullets || []).join(" · ");
   return `
-    <article class="project-card">
-      <h2>
-        <a href="project.html?id=${encodeURIComponent(p.id)}">
-          ${p.number}. ${escapeHtml(p.title)}
-        </a>
-      </h2>
-      <p class="summary">${escapeHtml(p.summary)}</p>
-      <p class="description">${escapeHtml(p.description)}</p>
-      ${p.headline_stat ? `<div class="stat-badge">${escapeHtml(p.headline_stat)}</div>` : ""}
-      ${bullets ? `<ul class="bullets">${bullets}</ul>` : ""}
-    </article>
+    <a class="project-card" href="project.html?id=${encodeURIComponent(p.id)}">
+      <h2>${p.number}. ${escapeHtml(p.title)}</h2>
+      <div class="arch">${escapeHtml(p.summary)}</div>
+      <div class="desc">${escapeHtml(p.description)}</div>
+      ${p.headline_stat ? `<span class="accuracy">${escapeHtml(p.headline_stat)}</span>` : ""}
+      ${techniques ? `<div class="techniques">${escapeHtml(techniques)}</div>` : ""}
+    </a>
   `;
 }
 
@@ -41,7 +38,7 @@ function projectCard(p) {
 
 async function renderProject() {
   // Fall back to the first registry entry if no id was supplied, so the
-  // page doesn't 404 on a bare visit to project.html.
+  // page does not 404 on a bare visit to project.html.
   const params = new URLSearchParams(window.location.search);
   let id = params.get("id");
   if (!id) {
@@ -66,44 +63,67 @@ async function renderProject() {
     .map(p => `<li>${escapeHtml(p)}</li>`).join("");
 
   document.getElementById("project-detail").innerHTML = `
-    <h1>${info.number}. ${escapeHtml(info.title)}</h1>
-    <p class="summary">${escapeHtml(info.summary)}</p>
-    <p class="description">${escapeHtml(info.description)}</p>
+    <section class="project-meta">
+      <h1>${info.number}. ${escapeHtml(info.title)}</h1>
+      <div class="arch">${escapeHtml(info.summary)}</div>
+      <div class="result-summary">${escapeHtml(info.description)}</div>
+    </section>
 
-    <section class="try-it">
-      <div class="try-it-header">
-        <h3>Try it</h3>
-      </div>
-      <div class="demo-wrapper" id="demo-wrapper">
-        <div id="status">loading...</div>
-        <div class="board" id="board"></div>
-        <div class="controls">
-          <button class="btn primary" id="btn-new-user">New game (you first)</button>
-          <button class="btn" id="btn-new-agent">New game (agent first)</button>
+    <section class="try-it-section">
+      <h2>Try it</h2>
+      <div class="try-it-layout">
+        <div class="try-it-left">
+          <div class="ttt-wrapper">
+            <div class="ttt-board" id="ttt-board"></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-primary" id="btn-new-user">You first</button>
+            <button id="btn-new-agent">Agent first</button>
+          </div>
+          <div class="try-it-hint">${escapeHtml(info.demo?.caption || "")}</div>
         </div>
-        <p class="try-it-caption">${escapeHtml(info.demo?.caption || "")}</p>
+        <div class="try-it-right">
+          <div class="ttt-status" id="ttt-status">loading...</div>
+          ${learning ? `
+            <div class="notes-body" style="margin-top:1rem;">
+              <h3>How it picks</h3>
+              <p>For every empty cell, look up <code>Q(state, action)</code> in the trained table; play the cell with the highest value. Default to 0 for any pair never seen in training.</p>
+              <pre><code>${escapeHtml(learning.formula || "")}</code></pre>
+            </div>
+          ` : ""}
+        </div>
       </div>
     </section>
 
-    <h3 class="section-heading">Notes</h3>
-    <div class="notes">${notes}</div>
+    ${notes ? `
+      <section class="notes-section">
+        <h2>Notes</h2>
+        <div class="notes-body">${notes}</div>
+      </section>
+    ` : ""}
 
-    ${learning ? `
-      <h3 class="section-heading">${escapeHtml(learning.title || "Learning method")}</h3>
-      <div class="learning-method">
-        ${learning.formula ? `<div class="formula">${escapeHtml(learning.formula)}</div>` : ""}
-        <ul>${learningPoints}</ul>
-      </div>
+    ${learning && learningPoints ? `
+      <section class="notes-section">
+        <h2>${escapeHtml(learning.title || "Learning method")}</h2>
+        <div class="notes-body">
+          ${learning.formula ? `<pre><code>${escapeHtml(learning.formula)}</code></pre>` : ""}
+          <ul>${learningPoints}</ul>
+        </div>
+      </section>
     ` : ""}
 
     ${learned ? `
-      <h3 class="section-heading">What I learned</h3>
-      <div class="list-block"><ul>${learned}</ul></div>
+      <section class="notes-section">
+        <h2>What I learned</h2>
+        <div class="notes-body"><ul>${learned}</ul></div>
+      </section>
     ` : ""}
 
     ${next ? `
-      <h3 class="section-heading">Things to try next</h3>
-      <div class="list-block"><ul>${next}</ul></div>
+      <section class="notes-section">
+        <h2>Things to try next</h2>
+        <div class="notes-body"><ul>${next}</ul></div>
+      </section>
     ` : ""}
   `;
 
@@ -114,10 +134,10 @@ async function renderProject() {
 
 /* ====================== TIC TAC TOE DEMO ============================ */
 
-// Module-level state for the demo. Lives on `window.ttt` for easy debug.
+// Module-level demo state; exposed on `window.ttt` for easy debugging.
 const ttt = {
-  qTable: null,           // Map of "state|r,c" -> Q-value
-  board:  null,           // array of 9 chars: '.', 'X', 'O'
+  qTable: null,    // map "state|r,c" -> Q-value
+  board:  null,    // flat array of 9 chars: '.', 'X', 'O'
   userTurn: true,
   gameOver: false,
   agentToken: "X",
@@ -129,16 +149,15 @@ async function initTicTacToeDemo(demoConfig) {
   ttt.agentToken = demoConfig.agent_token || "X";
   ttt.userToken  = demoConfig.user_token  || "O";
 
-  // Load the exported Q-table. Keys look like ".X.O.....|1,2" -> 0.43.
-  const raw = await (await fetch(demoConfig.q_table_path)).json();
-  ttt.qTable = raw;
+  // Keys look like ".X.O.....|1,2" -> 0.43; same encoding the Python
+  // exporter writes.
+  ttt.qTable = await (await fetch(demoConfig.q_table_path)).json();
 
-  // Render the 9 empty cells once; handlers are attached via delegation.
-  const boardEl = document.getElementById("board");
+  const boardEl = document.getElementById("ttt-board");
   boardEl.innerHTML = "";
   for (let i = 0; i < 9; i++) {
     const btn = document.createElement("button");
-    btn.className = "cell";
+    btn.className = "ttt-cell";
     btn.dataset.index = i;
     btn.addEventListener("click", onCellClick);
     boardEl.appendChild(btn);
@@ -171,36 +190,34 @@ function onCellClick(e) {
   ttt.userTurn = false;
   renderBoard();
 
-  if (evaluateGame()) return;   // user might have just won (unlikely from 1 move)
+  if (evaluateGame()) return;
   setStatus("Agent thinking...");
-  setTimeout(agentMove, 250);   // tiny pause so the move feels intentional
+  setTimeout(agentMove, 250);
 }
 
 function agentMove() {
   if (ttt.gameOver) return;
 
-  // Encode current board as 9-char state string; exactly the format used
-  // by the Python exporter (row by row, '.', 'X', 'O').
+  // Current board as the 9-char state string - matches the Python key format.
   const state = ttt.board.join("");
 
-  // Enumerate legal moves (empty cells) and score each against the Q-table.
+  // Enumerate legal moves and score each against the Q-table; argmax wins.
   let bestIdx = -1;
   let bestVal = -Infinity;
   for (let i = 0; i < 9; i++) {
     if (ttt.board[i] !== ".") continue;
     const r = Math.floor(i / 3);
     const c = i % 3;
-    const key = `${state}|${r},${c}`;
-    // Default to 0 for unseen (state, action) pairs - matches the agent's
-    // optimistic-init behavior in agent.py's find_best_move.
-    const v = ttt.qTable[key] ?? 0;
+    // Default 0 for unseen (state, action) pairs - optimistic init, same
+    // behavior as agent.py's find_best_move.
+    const v = ttt.qTable[`${state}|${r},${c}`] ?? 0;
     if (v > bestVal) {
       bestVal = v;
       bestIdx = i;
     }
   }
 
-  if (bestIdx === -1) return;   // no legal moves; evaluateGame will catch it
+  if (bestIdx === -1) return;
 
   ttt.board[bestIdx] = ttt.agentToken;
   ttt.userTurn = true;
@@ -211,11 +228,10 @@ function agentMove() {
 
 /* ------------------------- Board + win logic ------------------------- */
 
-// Eight winning index triples on a flat 9-element board.
 const WIN_LINES = [
-  [0, 1, 2], [3, 4, 5], [6, 7, 8],      // rows
-  [0, 3, 6], [1, 4, 7], [2, 5, 8],      // columns
-  [0, 4, 8], [2, 4, 6],                 // diagonals
+  [0, 1, 2], [3, 4, 5], [6, 7, 8],   // rows
+  [0, 3, 6], [1, 4, 7], [2, 5, 8],   // columns
+  [0, 4, 8], [2, 4, 6],              // diagonals
 ];
 
 function findWinner() {
@@ -233,17 +249,13 @@ function isDraw() {
   return ttt.board.every(c => c !== ".");
 }
 
-// Returns true when the game has ended (and updates UI accordingly).
 function evaluateGame() {
   const winner = findWinner();
   if (winner) {
     ttt.gameOver = true;
     highlightWinningLine(winner.line);
-    if (winner.token === ttt.userToken) {
-      setStatus("You win!", "win");
-    } else {
-      setStatus("Agent wins.", "loss");
-    }
+    if (winner.token === ttt.userToken) setStatus("You win!", "win");
+    else                                setStatus("Agent wins.", "loss");
     return true;
   }
   if (isDraw()) {
@@ -255,7 +267,7 @@ function evaluateGame() {
 }
 
 function renderBoard() {
-  const cells = document.querySelectorAll(".cell");
+  const cells = document.querySelectorAll(".ttt-cell");
   cells.forEach((btn, i) => {
     const v = ttt.board[i];
     btn.textContent = v === "." ? "" : v;
@@ -267,20 +279,19 @@ function renderBoard() {
 }
 
 function highlightWinningLine(line) {
-  const cells = document.querySelectorAll(".cell");
+  const cells = document.querySelectorAll(".ttt-cell");
   line.forEach(i => cells[i].classList.add("winning"));
 }
 
 function setStatus(msg, cls = "") {
-  const el = document.getElementById("status");
+  const el = document.getElementById("ttt-status");
   el.textContent = msg;
-  el.className = cls;
+  el.className = "ttt-status" + (cls ? " " + cls : "");
 }
 
 /* ---------------------------- utilities ------------------------------ */
 
 function escapeHtml(s) {
-  // Safe-by-default: data comes from JSON files but we never trust it.
   return String(s)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")

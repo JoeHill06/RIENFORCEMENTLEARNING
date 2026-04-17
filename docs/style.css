@@ -1,301 +1,300 @@
-/* -----------------------------------------------------------------------
- * Reinforcement Learning - project site
- * Styled to echo the screenshot reference: black-on-off-white, serif title,
- * system sans-serif body, monospace for algorithm summaries and keys.
- * --------------------------------------------------------------------- */
+/* ── Reset & Base ─────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --bg:       #fafaf8;
-  --ink:      #1a1a1a;
-  --muted:    #666;
-  --line:     #e4e4e0;
-  --panel:    #ffffff;
-  --accent:   #d4ebdc;
-  --accent-ink: #1f5a34;
-  --hover:    #f0efeb;
-  --x-color:  #1a1a1a;
-  --o-color:  #b04a4a;
-  --win:      #fff6c2;
-}
-
-* { box-sizing: border-box; }
-
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+body {
+  background: #fff;
+  color: #333;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   font-size: 15px;
-  line-height: 1.55;
+  line-height: 1.6;
+  min-height: 100vh;
 }
 
-.page {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 56px 32px 96px;
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Page shell ───────────────────────────────────────────────────────────── */
+.page-header {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1.25rem 2rem;
+  background: #fafafa;
 }
-
-/* --------------------------- Index page ------------------------------ */
-
 .page-header h1 {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 32px;
-  font-weight: 700;
-  margin: 0 0 8px;
-  letter-spacing: -0.01em;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #111;
+}
+.page-header .subtitle {
+  font-size: 0.88rem;
+  color: #666;
+  margin-top: 0.15rem;
+}
+.page-header a {
+  color: #666;
+  font-size: 0.85rem;
+}
+.page-header a:hover { color: #111; }
+
+.page-body {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
 }
 
-.subtitle {
-  color: var(--muted);
-  margin: 0 0 40px;
-  font-size: 15px;
-}
-
-.project-list {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
+/* ── Landing page: project cards ──────────────────────────────────────────── */
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
 .project-card {
-  padding-bottom: 36px;
-  border-bottom: 1px solid var(--line);
+  display: block;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+  color: inherit;
 }
-.project-card:last-child {
-  border-bottom: none;
+.project-card:hover {
+  border-color: #2563eb;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+  text-decoration: none;
 }
-
 .project-card h2 {
-  font-size: 18px;
-  font-weight: 700;
-  margin: 0 0 6px;
-  letter-spacing: -0.005em;
-}
-
-.project-card h2 a {
-  color: var(--ink);
-  text-decoration: none;
-}
-.project-card h2 a:hover {
-  text-decoration: underline;
-}
-
-.summary {
-  font-family: "SF Mono", Menlo, Consolas, monospace;
-  font-size: 13px;
-  color: #3366aa;
-  margin: 0 0 10px;
-  word-break: break-word;
-}
-
-.description {
-  margin: 0 0 12px;
-  color: var(--ink);
-}
-
-.stat-badge {
-  display: inline-block;
-  background: var(--accent);
-  color: var(--accent-ink);
-  padding: 3px 10px;
-  border-radius: 4px;
-  font-size: 13px;
+  font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 10px;
+  color: #111;
+  margin-bottom: 0.3rem;
 }
-
-.bullets {
-  font-size: 13px;
-  color: var(--muted);
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.project-card .arch {
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.82rem;
+  color: #666;
+  margin-bottom: 0.5rem;
 }
-
-.bullets li {
-  padding: 2px 0;
+.project-card .desc {
+  font-size: 0.88rem;
+  color: #555;
+  margin-bottom: 0.5rem;
 }
-
-.bullets code {
-  background: var(--line);
-  padding: 1px 5px;
-  border-radius: 3px;
-  font-size: 12px;
-  color: var(--ink);
-}
-
-/* --------------------------- Project page ----------------------------- */
-
-.back-link {
+.project-card .accuracy {
   display: inline-block;
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 13px;
-  margin-bottom: 24px;
+  background: #ecfdf5;
+  color: #065f46;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
 }
-.back-link:hover {
-  color: var(--ink);
-}
-
-#project-detail h1 {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 26px;
-  margin: 0 0 8px;
+.project-card .techniques {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 0.4rem;
 }
 
-#project-detail .summary {
-  font-size: 14px;
-  margin-bottom: 14px;
+/* ── Project page layout ──────────────────────────────────────────────────── */
+.project-page-body {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 4rem;
 }
 
-#project-detail .description {
-  margin-bottom: 32px;
+.project-meta {
+  margin-bottom: 1.5rem;
+}
+.project-meta h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111;
+}
+.project-meta .arch {
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.88rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+.project-meta .result-summary {
+  font-size: 0.88rem;
+  color: #555;
+  margin-top: 0.35rem;
 }
 
-.section-heading {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+/* ── Try-it widget ────────────────────────────────────────────────────────── */
+.try-it-section {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+}
+.try-it-section h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.75rem;
   text-transform: uppercase;
-  color: var(--muted);
-  margin: 32px 0 10px;
+  letter-spacing: 0.04em;
 }
-
-.notes p {
-  margin: 0 0 12px;
-}
-
-.learning-method {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 16px 20px;
-  margin: 8px 0 16px;
-}
-.learning-method .formula {
-  font-family: "SF Mono", Menlo, Consolas, monospace;
-  font-size: 13px;
-  background: var(--hover);
-  padding: 10px 12px;
-  border-radius: 4px;
-  margin: 8px 0 14px;
-  overflow-x: auto;
-}
-
-.learning-method ul,
-.list-block ul {
-  margin: 0;
-  padding-left: 20px;
-}
-.learning-method li,
-.list-block li {
-  margin-bottom: 6px;
-}
-
-/* --------------------------- Try-it demo ------------------------------ */
-
-.try-it {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 24px;
-  margin: 10px 0 20px;
-}
-
-.try-it-header {
+.try-it-layout {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 14px;
+  gap: 1.5rem;
+  align-items: flex-start;
 }
-
-.try-it-header h3 {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 0;
-}
-
-.try-it-caption {
-  color: var(--muted);
-  font-size: 13px;
-  margin: 0;
-}
-
-.demo-wrapper {
+.try-it-left {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+.try-it-right {
+  flex: 1;
+  min-width: 0;
 }
 
-#status {
-  font-size: 14px;
-  color: var(--muted);
-  min-height: 20px;
+.try-it-hint {
+  font-size: 0.78rem;
+  color: #999;
 }
-#status.win  { color: var(--accent-ink); font-weight: 600; }
-#status.loss { color: var(--o-color);     font-weight: 600; }
-#status.draw { color: var(--muted);       font-weight: 600; }
 
-.board {
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+button {
+  padding: 0.45rem 1.1rem;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+  color: #333;
+  font-family: inherit;
+}
+button:hover { background: #f3f4f6; border-color: #bbb; }
+button:active { transform: scale(0.98); }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-primary {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+.btn-primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ── Tic Tac Toe board ───────────────────────────────────────────────────── */
+.ttt-wrapper {
+  border: 2px solid #d1d5db;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #e5e7eb;
+}
+.ttt-board {
   display: grid;
   grid-template-columns: repeat(3, 84px);
   grid-template-rows:    repeat(3, 84px);
-  gap: 4px;
-  background: var(--line);
-  padding: 4px;
-  border-radius: 4px;
+  gap: 2px;
+  background: #d1d5db;
 }
-
-.cell {
-  background: var(--panel);
+.ttt-cell {
+  background: #fff;
   border: none;
-  font-size: 44px;
+  border-radius: 0;
+  padding: 0;
+  font-size: 2.4rem;
   font-weight: 700;
-  color: var(--ink);
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  color: #333;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: Georgia, serif;
-  transition: background 120ms;
-  border-radius: 2px;
+  transition: background 0.12s;
 }
-.cell:hover:not(:disabled) {
-  background: var(--hover);
-}
-.cell:disabled {
-  cursor: default;
-}
-.cell.x { color: var(--x-color); }
-.cell.o { color: var(--o-color); }
-.cell.winning {
-  background: var(--win);
-}
+.ttt-cell:hover:not(:disabled) { background: #f3f4f6; }
+.ttt-cell:disabled { cursor: default; }
+.ttt-cell.x { color: #2563eb; }
+.ttt-cell.o { color: #dc2626; }
+.ttt-cell.winning { background: #ecfdf5; }
 
-.controls {
-  display: flex;
-  gap: 10px;
+.ttt-status {
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #444;
+  min-height: 1.4rem;
+  padding: 0.25rem 0;
 }
+.ttt-status.win  { color: #065f46; font-weight: 600; }
+.ttt-status.loss { color: #991b1b; font-weight: 600; }
+.ttt-status.draw { color: #666;    font-weight: 600; }
 
-.btn {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  color: var(--ink);
-  padding: 6px 16px;
+/* ── Notes section ────────────────────────────────────────────────────────── */
+.notes-section {
+  margin-bottom: 2rem;
+}
+.notes-section h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.notes-body {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #444;
+}
+.notes-body h1 { font-size: 1.15rem; color: #111; margin-bottom: 0.5rem; }
+.notes-body h2 { font-size: 1rem; color: #111; margin: 1rem 0 0.4rem; }
+.notes-body h3 { font-size: 0.92rem; color: #333; margin: 0.8rem 0 0.3rem; }
+.notes-body p  { margin-bottom: 0.6rem; }
+.notes-body ul, .notes-body ol { padding-left: 1.4rem; margin-bottom: 0.6rem; }
+.notes-body li { margin-bottom: 0.2rem; }
+.notes-body code {
+  background: #f3f4f6;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.85em;
+  color: #c7254e;
+}
+.notes-body pre {
+  background: #f3f4f6;
+  padding: 0.7rem 0.9rem;
   border-radius: 4px;
-  font-size: 13px;
-  cursor: pointer;
-  font-family: inherit;
+  overflow-x: auto;
+  margin-bottom: 0.7rem;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.82rem;
+  color: #333;
 }
-.btn:hover { background: var(--hover); }
-.btn.primary {
-  background: var(--ink);
-  color: var(--bg);
-  border-color: var(--ink);
+.notes-body pre code {
+  background: none;
+  color: #333;
+  padding: 0;
+  font-size: inherit;
 }
-.btn.primary:hover { background: #000; }
+.notes-body em { font-style: italic; color: #555; }
+.notes-body strong { font-weight: 700; color: #222; }
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .page-body, .project-page-body { padding: 1rem; }
+  .try-it-layout { flex-direction: column; align-items: center; }
+  .try-it-right { width: 100%; }
+  .ttt-board {
+    grid-template-columns: repeat(3, 72px);
+    grid-template-rows:    repeat(3, 72px);
+  }
+}
