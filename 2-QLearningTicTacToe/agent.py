@@ -8,7 +8,7 @@ State = Tuple[Tuple[int, ...], ...]
 class agent():
     def __init__(self, alpha=0.1, gamma=0.9, epsilon=0.1, token=0):
         # q_table key is (state, action) -> float; defaultdict returns 0.0 for unseen keys
-        self.q_table = defaultdict(float)
+        self.q_table = defaultdict(lambda: 1.0) # setting unseen states as 1 encourages experimentation
         self.alpha = alpha      # learning rate
         self.gamma = gamma      # discount rate
         self.epsilon = epsilon  # exploration rate

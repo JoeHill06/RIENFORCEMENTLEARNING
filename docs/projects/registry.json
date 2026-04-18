@@ -21,13 +21,13 @@
       "number": 2,
       "title": "Q-Learning Tic Tac Toe (Self-Play)",
       "summary": "tabular Q-learning -> two agents play each other -> Bellman update",
-      "description": "Two tabular Q-learners trained against each other via self-play. Both use epsilon-greedy with linear decay from 1.0 to 0.05. After each move, the opponent's prior (state, action) is updated with the resulting next-board so both sides learn from every non-terminal step.",
-      "headline_stat": "A1 2420W/15032D/2548L · A2 2548W/15032D/2420L (20k eps)",
+      "description": "Two tabular Q-learners trained against each other via self-play. Both use epsilon-greedy with linear decay from 0.2 to 0.05, paired with optimistic Q-init at 1.0 so unseen moves get tried before epsilon-exploration kicks in. After each move, the opponent's prior (state, action) is updated with the resulting next-board so both sides learn from every non-terminal step.",
+      "headline_stat": "ep 30000 | ε=0.050 | A1 W/D/L 7915/14122/7963 | A2 W/D/L 7963/14122/7915 | Q-table 28113",
       "bullets": [
-        "alpha=0.1 learning rate",
-        "gamma=0.9 discount",
-        "epsilon decays 1.0 -> 0.05 over 80% of training",
-        "self-play - two Q-tables, each learning against the other"
+        "alpha=1.0 learning rate - deterministic environment, every update is believed outright",
+        "gamma=1.0 discount - finite 9-move horizon, terminal reward propagates undiminished",
+        "epsilon decays 0.2 -> 0.05 over 80% of training, with optimistic Q-init=1.0 driving early exploration",
+        "self-play - two Q-tables, each learning against the other (30k episodes)"
       ]
     }
   ]

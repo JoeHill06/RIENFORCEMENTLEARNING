@@ -5,10 +5,10 @@ import json
 import random
 
 # Create agents: alpha, gamma, epsilon, token
-agent1 = agent(0.1, 0.9, 0.1, 1)
-agent2 = agent(0.1, 0.9, 0.1, 0)
+agent1 = agent(1, 1, 0.2, 1) # since out game is deterministic we can know our next state so we can make alpha large
+agent2 = agent(1, 1, 0.2, 0) # we can make gamma 1 since it always ends in 9 moves or less so the future is bounded a win 8 moves away is as good as 1 move away
 
-epochs = 20000
+epochs = 30000
 epsilon_start = agent1.epsilon
 epsilon_end = 0.05
 decay_fraction = 0.8

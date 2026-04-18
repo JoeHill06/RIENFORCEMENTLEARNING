@@ -1,6 +1,6 @@
 # Q-Learning Tic Tac Toe — Notes
 
-A tabular Q-learning agent that learns to play tic tac toe by self-bootstrapping against a uniformly-random opponent. No neural network, no PyTorch — just a Python dictionary mapping `(state, action)` pairs to estimated values.
+A tabular Q-learning agent that learns to play tic tac toe by learning against a uniformly-random opponent. No neural network, no PyTorch — just a Python dictionary mapping `(state, action)` pairs to estimated values. This board model without knoledge of rotations and symmetry can find a total of 5,748 different states but we dont store terminal states (states where the game has ended) so actually our model can only find 4,520 non terminal states.
 
 ## What the project contains
 
@@ -40,7 +40,7 @@ In plain English: a dictionary keyed by `(state, action)`, where
 - **action** is `(row, col)`
 - the value is the current estimate of `Q(state, action)` — the discounted return the agent expects from playing `action` in `state` and then acting greedily forever after
 
-Unseen pairs default to `0.0` — **optimistic initialization**, nudging the agent to try actions it has never taken.
+
 
 ### Action selection — `find_best_move`
 
@@ -187,5 +187,6 @@ Because `ε = 0.1`: roughly 1 in 10 of the agent's moves is a coin flip, and a f
 
 ## Limitations and next steps
 
+- **Board Roations and Symmetry.** A Tic Tac Toes board can be roatated 4 times and is symmetric so the model actually can learn the same states multiple times and not know. Though I like the idea that you only give it the rules of the game and no other knowlege and it can learn anyway. 
 - **Training opponent is dumb.** A random opponent cannot produce adversarial states, so the agent may have soft spots against any competent opponent. Self-play (two Q-learners against each other) is the standard next step.
 - **Table scale.** Tabular Q-learning works here because tic tac toe has at most a few thousand reachable states. For anything larger (connect four, checkers), function approximation — i.e. deep Q-learning — replaces the dict with a neural network. Beyond that other methods are used policy gradients, actor-critic, AlphaZero-style approaches. 

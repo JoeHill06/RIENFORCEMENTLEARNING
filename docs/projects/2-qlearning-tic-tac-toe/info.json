@@ -2,8 +2,8 @@
   "id": "2-qlearning-tic-tac-toe",
   "number": 2,
   "title": "Q-Learning Tic Tac Toe (Self-Play)",
-  "summary": "tabular Q-learning -> two agents play each other -> Bellman update",
-  "description": "Two tabular Q-learners trained against each other via self-play. Both use epsilon-greedy over a dict mapping (state, action) to estimated value, with linear epsilon decay. After each move, the opponent's prior state/action is updated with the resulting next-board, so both agents learn from every non-terminal step. The agent serialized for this demo plays X.",
+  "summary": "tabular Q-learning -> two agents play each other -> Bellman update (",
+  "description": "Two tabular Q-learners trained against each other via self-play. Both use epsilon-greedy over a dict mapping (state, action) to estimated value, with linear epsilon decay. After each move, the opponent's prior state/action is updated with the resulting next-board, so both agents learn from every non-terminal step.",
   "demo": {
     "type": "tic-tac-toe",
     "caption": "Pick which agent to play against. Click a cell to move.",
@@ -41,7 +41,8 @@
   "what_i_learned": [
     "Self-play produces stronger adversarial states than a random opponent — the Q-table covers positions a random player would rarely reach.",
     "Each agent needs its OWN buffered (state, action), not a single shared one — they update on different turns.",
-    "Reward is zero-sum: when one agent wins, the other's last move must be updated with -1 against its stashed state."
+    "Reward is zero-sum: when one agent wins, the other's last move must be updated with -1 against its stashed state.",
+    "Alpha, Gamma, Epsilon and inital new state values being set."
   ],
   "things_to_try_next": [
     "Evaluate with epsilon=0 against a perfect minimax player to measure true convergence (expect 100% draws).",
