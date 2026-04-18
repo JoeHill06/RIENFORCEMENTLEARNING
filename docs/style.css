@@ -534,37 +534,40 @@ button:active { transform: scale(0.98); }
 /* ── Tic Tac Toe board (sits inside .try-it-left where the MNIST canvas
  *    would go; uses the same card/border language as .canvas-wrapper) ─── */
 .ttt-wrapper {
-  border: 2px solid #d1d5db;
-  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
   overflow: hidden;
-  background: #d1d5db;
+  background: #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  display: inline-block;
+  line-height: 0;
 }
 .ttt-board {
   display: grid;
-  grid-template-columns: repeat(3, 84px);
-  grid-template-rows:    repeat(3, 84px);
-  gap: 2px;
+  grid-template-columns: repeat(3, 88px);
+  grid-template-rows:    repeat(3, 88px);
+  gap: 1px;
 }
 .ttt-cell {
   background: #fff;
   border: none;
   border-radius: 0;
   padding: 0;
-  font-size: 2.4rem;
-  font-weight: 700;
+  font-size: 2.6rem;
+  font-weight: 500;
   font-family: 'SFMono-Regular', Consolas, monospace;
-  color: #333;
+  color: #111;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background 0.12s;
 }
-.ttt-cell:hover:not(:disabled) { background: #f3f4f6; }
+.ttt-cell:hover:not(:disabled) { background: #f9fafb; }
 .ttt-cell:disabled { cursor: default; }
-.ttt-cell.x { color: #2563eb; }
-.ttt-cell.o { color: #dc2626; }
-.ttt-cell.winning { background: #ecfdf5; }
+.ttt-cell.x,
+.ttt-cell.o { color: #111; }
+.ttt-cell.winning { background: #f0fdf4; }
 
 .ttt-status {
   text-align: center;
@@ -577,6 +580,26 @@ button:active { transform: scale(0.98); }
 .ttt-status.win  { color: #065f46; font-weight: 600; }
 .ttt-status.loss { color: #991b1b; font-weight: 600; }
 .ttt-status.draw { color: #666;    font-weight: 600; }
+
+.ttt-agent-picker {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+.ttt-agent-btn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+}
+.ttt-agent-btn.active {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+.ttt-agent-btn.active:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
 
 /* ── Responsive ───────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {

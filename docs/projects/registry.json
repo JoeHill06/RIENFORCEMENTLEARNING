@@ -15,6 +15,20 @@
         "epsilon=0.1 exploration - 1 in 10 moves is random, keeping coverage alive",
         "1134 (state, action) pairs in the Q-table - full coverage of reachable positions"
       ]
+    },
+    {
+      "id": "2-qlearning-tic-tac-toe",
+      "number": 2,
+      "title": "Q-Learning Tic Tac Toe (Self-Play)",
+      "summary": "tabular Q-learning -> two agents play each other -> Bellman update",
+      "description": "Two tabular Q-learners trained against each other via self-play. Both use epsilon-greedy with linear decay from 1.0 to 0.05. After each move, the opponent's prior (state, action) is updated with the resulting next-board so both sides learn from every non-terminal step.",
+      "headline_stat": "A1 2420W/15032D/2548L · A2 2548W/15032D/2420L (20k eps)",
+      "bullets": [
+        "alpha=0.1 learning rate",
+        "gamma=0.9 discount",
+        "epsilon decays 1.0 -> 0.05 over 80% of training",
+        "self-play - two Q-tables, each learning against the other"
+      ]
     }
   ]
 }

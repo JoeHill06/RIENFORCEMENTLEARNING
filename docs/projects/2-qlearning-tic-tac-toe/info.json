@@ -1,0 +1,51 @@
+{
+  "id": "2-qlearning-tic-tac-toe",
+  "number": 2,
+  "title": "Q-Learning Tic Tac Toe (Self-Play)",
+  "summary": "tabular Q-learning -> two agents play each other -> Bellman update",
+  "description": "Two tabular Q-learners trained against each other via self-play. Both use epsilon-greedy over a dict mapping (state, action) to estimated value, with linear epsilon decay. After each move, the opponent's prior state/action is updated with the resulting next-board, so both agents learn from every non-terminal step. The agent serialized for this demo plays X.",
+  "demo": {
+    "type": "tic-tac-toe",
+    "caption": "Pick which agent to play against. Click a cell to move.",
+    "agents": [
+      {
+        "id": "agent1",
+        "label": "Agent 1 (plays X)",
+        "q_table_path": "projects/2-qlearning-tic-tac-toe/q_table_agent1.json",
+        "agent_token": "X",
+        "user_token": "O"
+      },
+      {
+        "id": "agent2",
+        "label": "Agent 2 (plays O)",
+        "q_table_path": "projects/2-qlearning-tic-tac-toe/q_table_agent2.json",
+        "agent_token": "O",
+        "user_token": "X"
+      }
+    ]
+  },
+  "notes": {
+    "markdown_path": "projects/2-qlearning-tic-tac-toe/notes.md"
+  },
+  "learning_method": {
+    "title": "The update rule",
+    "formula": "Q(s, a) <- Q(s, a) + alpha * [r + gamma * max_a' Q(s', a') - Q(s, a)]",
+    "points": [
+      "alpha (learning rate) controls how much the new estimate overrides the old",
+      "gamma (discount) shrinks the value of rewards that are further in the future",
+      "max over a' is what makes Q-learning off-policy: the target assumes optimal future play, not the policy actually being followed",
+      "on a terminal transition the future term is forced to 0 because no reward remains",
+      "self-play: each agent's move is buffered for one turn so the opponent's response can form next_state before the Bellman update runs"
+    ]
+  },
+  "what_i_learned": [
+    "Self-play produces stronger adversarial states than a random opponent — the Q-table covers positions a random player would rarely reach.",
+    "Each agent needs its OWN buffered (state, action), not a single shared one — they update on different turns.",
+    "Reward is zero-sum: when one agent wins, the other's last move must be updated with -1 against its stashed state."
+  ],
+  "things_to_try_next": [
+    "Evaluate with epsilon=0 against a perfect minimax player to measure true convergence (expect 100% draws).",
+    "Symmetry reduction: tic-tac-toe has 8-way symmetry, so collapsing equivalent states would shrink the Q-table ~8x.",
+    "Move to Connect Four or a larger board where tabular storage breaks and function approximation (DQN) becomes necessary."
+  ]
+}

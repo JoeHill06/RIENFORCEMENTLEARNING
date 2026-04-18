@@ -191,12 +191,16 @@ const ttt = {
 window.ttt = ttt;
 
 async function initTicTacToeDemo(demoConfig) {
-  ttt.agentToken = demoConfig.agent_token || "X";
-  ttt.userToken  = demoConfig.user_token  || "O";
-
-  // Keys look like ".X.O.....|1,2" -> 0.43; same encoding the Python
-  // exporter writes.
-  ttt.qTable = await (await fetch(demoConfig.q_table_path)).json();
+  // Normalize to an agents array so the single-agent (legacy) and
+  // multi-agent configs share one code path below.
+  ttt.agents = demoConfig.agents || [{
+    id: "default",
+    label: "Agent",
+    q_table_path: demoConfig.q_table_path,
+    agent_token: demoConfig.agent_token || "X",
+    user_token:  demoConfig.user_token  || "O",
+  }];
+  ttt.qTables = {};  // cache loaded tables keyed by agent id
 
   const boardEl = document.getElementById("ttt-board");
   boardEl.innerHTML = "";
@@ -208,8 +212,43 @@ async function initTicTacToeDemo(demoConfig) {
     boardEl.appendChild(btn);
   }
 
+  // If there are multiple agents, render a picker row above the board
+  // frame. Insert it as a sibling of the wrapper, NOT inside it - wider
+  // pickers would otherwise stretch the wrapper past the cell grid.
+  if (ttt.agents.length > 1) {
+    const picker = document.createElement("div");
+    picker.className = "ttt-agent-picker";
+    ttt.agents.forEach(a => {
+      const btn = document.createElement("button");
+      btn.textContent = a.label;
+      btn.className = "ttt-agent-btn";
+      btn.dataset.agentId = a.id;
+      btn.addEventListener("click", () => selectAgent(a.id));
+      picker.appendChild(btn);
+    });
+    const wrapper = boardEl.parentElement;
+    wrapper.parentElement.insertBefore(picker, wrapper);
+  }
+
   document.getElementById("btn-new-user").addEventListener("click", () => newGame(true));
   document.getElementById("btn-new-agent").addEventListener("click", () => newGame(false));
+
+  await selectAgent(ttt.agents[0].id);
+}
+
+async function selectAgent(id) {
+  const agent = ttt.agents.find(a => a.id === id);
+  if (!agent) return;
+  if (!ttt.qTables[id]) {
+    ttt.qTables[id] = await (await fetch(agent.q_table_path)).json();
+  }
+  ttt.qTable     = ttt.qTables[id];
+  ttt.agentToken = agent.agent_token;
+  ttt.userToken  = agent.user_token;
+
+  document.querySelectorAll(".ttt-agent-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.agentId === id);
+  });
 
   newGame(true);
 }

@@ -28,10 +28,7 @@ wins = losses = draws = 0
 for episode in range(epochs):
     # Linear epsilon decay. `max` clamps to EPSILON_END once we're past
     # the decay window, so the tail of training is almost pure exploitation.
-    Agent1.epsilon = max(
-        EPSILON_END,
-        EPSILON_START - (EPSILON_START - EPSILON_END) * episode / DECAY_EPISODES,
-    )
+   
 
     # Fresh game every episode - otherwise the board from the previous game would be used
     Game = game()
