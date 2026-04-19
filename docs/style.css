@@ -162,6 +162,13 @@ a:hover { text-decoration: underline; }
   cursor: crosshair;
   touch-action: none;
 }
+.demo-video {
+  display: block;
+  width: 320px;
+  height: auto;
+  max-width: 100%;
+  background: #000;
+}
 .canvas-buttons {
   display: flex;
   gap: 0.5rem;
@@ -196,7 +203,9 @@ button:active { transform: scale(0.98); }
 .try-it-right {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
+.try-it-right > .notes-body { min-width: 0; max-width: 100%; }
 .prediction-display {
   text-align: center;
   padding: 0.5rem 0;
@@ -528,6 +537,22 @@ button:active { transform: scale(0.98); }
   border-radius: 3px;
   font-size: 0.85em;
   color: #c7254e;
+}
+.notes-body pre {
+  background: #f3f4f6;
+  padding: 0.6rem 0.8rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 0.4rem 0 0.6rem;
+  max-width: 100%;
+}
+.notes-body pre code {
+  background: none;
+  padding: 0;
+  color: #333;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.82rem;
+  white-space: pre;
 }
 .notes-body em { font-style: italic; color: #555; }
 

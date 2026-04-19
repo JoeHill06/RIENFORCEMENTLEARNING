@@ -68,13 +68,14 @@ async function renderProject() {
   const next = (info.things_to_try_next || [])
     .map(p => `<li>${escapeHtml(p)}</li>`).join("");
 
-  document.getElementById("project-detail").innerHTML = `
-    <section class="network-meta">
-      <h1>${info.number}. ${escapeHtml(info.title)}</h1>
-      <div class="arch">${escapeHtml(info.summary)}</div>
-      <div class="result-summary">${escapeHtml(info.description)}</div>
-    </section>
-
+  // Each demo type gets its own Try-it pane. `tic-tac-toe` renders the
+  // interactive board; `video` embeds an autoplaying loop of a recorded
+  // evaluation run (used for envs like Atari where there is no practical
+  // in-browser agent). Projects with no demo block simply skip the section.
+  const demoType = info.demo?.type;
+  let tryItSection = "";
+  if (demoType === "tic-tac-toe") {
+    tryItSection = `
     <section class="try-it-section">
       <h2>Try it</h2>
       <div class="try-it-layout">
@@ -86,7 +87,7 @@ async function renderProject() {
             <button class="btn-primary" id="btn-new-user">You first</button>
             <button id="btn-new-agent">Agent first</button>
           </div>
-          <div class="try-it-hint">${escapeHtml(info.demo?.caption || "")}</div>
+          <div class="try-it-hint">${escapeHtml(info.demo.caption || "")}</div>
         </div>
         <div class="try-it-right">
           <div class="ttt-status" id="ttt-status">loading...</div>
@@ -99,7 +100,40 @@ async function renderProject() {
           ` : ""}
         </div>
       </div>
+    </section>`;
+  } else if (demoType === "video") {
+    tryItSection = `
+    <section class="try-it-section">
+      <h2>Try it</h2>
+      <div class="try-it-layout">
+        <div class="try-it-left">
+          <div class="canvas-wrapper">
+            <video class="demo-video" src="${escapeHtml(info.demo.video_path)}"
+                   autoplay muted loop playsinline></video>
+          </div>
+          <div class="try-it-hint">${escapeHtml(info.demo.caption || "")}</div>
+        </div>
+        <div class="try-it-right">
+          ${learning ? `
+            <div class="notes-body">
+              <h3>How it picks</h3>
+              <p>Stack the last 4 grayscale frames, run them through the CNN, and pick the action with the highest predicted Q-value. A small ε keeps it from getting stuck in deterministic loops.</p>
+              <pre><code>${escapeHtml(learning.formula || "")}</code></pre>
+            </div>
+          ` : ""}
+        </div>
+      </div>
+    </section>`;
+  }
+
+  document.getElementById("project-detail").innerHTML = `
+    <section class="network-meta">
+      <h1>${info.number}. ${escapeHtml(info.title)}</h1>
+      <div class="arch">${escapeHtml(info.summary)}</div>
+      <div class="result-summary">${escapeHtml(info.description)}</div>
     </section>
+
+    ${tryItSection}
 
     ${notesMarkdownPath ? `
       <section class="notes-section">

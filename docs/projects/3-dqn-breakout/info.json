@@ -1,0 +1,39 @@
+{
+  "id": "3-dqn-breakout",
+  "number": 3,
+  "title": "Deep Q-Network — Atari Breakout",
+  "summary": "CNN Q-approximator -> replay buffer + target network -> Huber + Adam",
+  "description": "A convolutional DQN trained from raw Atari pixels. The Q-table is replaced by a 3-conv / 2-fc network that maps a (4, 84, 84) stack of grayscale frames to Q-values over the 4 Breakout actions. A 100k-capacity replay buffer decorrelates samples and a frozen target network (synced every 1000 steps) stabilises the bootstrap target. Trained 3000 episodes on CPU.",
+  "demo": {
+    "type": "video",
+    "video_path": "projects/3-dqn-breakout/demo.mp4",
+    "caption": "Evaluation game from the episode-2900 checkpoint (ε=0.05). Autoplays muted, loops."
+  },
+  "notes": {
+    "markdown_path": "projects/3-dqn-breakout/notes.md"
+  },
+  "learning_method": {
+    "title": "The update rule",
+    "formula": "Q(s, a; θ) <- Q(s, a; θ) + α * [r + γ * max_a' Q_target(s', a'; θ⁻) - Q(s, a; θ)]",
+    "points": [
+      "Q(s, a; θ) is now a neural network — a single forward pass outputs Q-values for every action",
+      "Q_target(s', a'; θ⁻) is a FROZEN copy of the network, updated every 1000 steps — stops the bootstrap target from shifting underneath the regression",
+      "transitions are stored in a replay buffer; each training step samples a random batch of 32 — breaks temporal correlation and lets every step be re-used",
+      "loss is smooth-L1 (Huber) — quadratic for small TD errors, linear for large ones, so outlier rewards don't explode the gradient",
+      "on terminal transitions the (1 - done) factor zeroes out the future term, same pattern as the tabular projects"
+    ]
+  },
+  "what_i_learned": [
+    "Function approximation replaces the Q-table once the state space breaks enumeration — the network learns a Q-FUNCTION, not a lookup, so visually similar states share structure automatically.",
+    "A replay buffer is the cost of moving away from tabular: in-place updates over correlated transitions diverge with a neural net, so you random-sample from stored experience instead.",
+    "A target network is the other cost: bootstrapping `max Q(s', a')` off the network being updated chases a moving target. Freeze a copy, update it every N steps.",
+    "Frame stacking is how the network sees velocity — a single frame hides ball direction, so 4 channel-stacked frames give it the temporal context it can't otherwise infer.",
+    "Huber loss over MSE matters when TD errors can be huge — MSE's quadratic tail blows up on outliers, Huber caps the gradient magnitude."
+  ],
+  "things_to_try_next": [
+    "Double DQN — decouple action selection (online net) from action evaluation (target net) to cut the max-bias overestimation of standard DQN.",
+    "Prioritised replay — sample high-TD-error transitions more often; uniform sampling wastes capacity on already-solved states.",
+    "Dueling heads — split the output into V(s) and A(s, a) streams; useful in Breakout where most actions are equivalent on most frames.",
+    "Longer training on GPU — 3k episodes on CPU is a proof of concept; the emergent tunnelling strategy needs ~10x more experience."
+  ]
+}
