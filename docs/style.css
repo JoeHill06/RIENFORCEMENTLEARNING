@@ -203,7 +203,9 @@ button:active { transform: scale(0.98); }
 .try-it-right {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
+.try-it-right > .notes-body { min-width: 0; max-width: 100%; }
 .prediction-display {
   text-align: center;
   padding: 0.5rem 0;
