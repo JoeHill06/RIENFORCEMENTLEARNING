@@ -162,6 +162,13 @@ a:hover { text-decoration: underline; }
   cursor: crosshair;
   touch-action: none;
 }
+.demo-video {
+  display: block;
+  width: 320px;
+  height: auto;
+  max-width: 100%;
+  background: #000;
+}
 .canvas-buttons {
   display: flex;
   gap: 0.5rem;

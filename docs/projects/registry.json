@@ -29,6 +29,20 @@
         "epsilon decays 0.2 -> 0.05 over 80% of training, with optimistic Q-init=1.0 driving early exploration",
         "self-play - two Q-tables, each learning against the other (30k episodes)"
       ]
+    },
+    {
+      "id": "3-dqn-breakout",
+      "number": 3,
+      "title": "Deep Q-Network — Atari Breakout",
+      "summary": "CNN Q-approximator -> replay buffer + target network -> Huber + Adam",
+      "description": "A convolutional DQN trained from raw Atari pixels. The Q-table is replaced by a 3-conv / 2-fc network that maps a (4, 84, 84) stack of grayscale frames to Q-values over the 4 Breakout actions. A 100k-capacity replay buffer decorrelates samples and a frozen target network (synced every 1000 steps) stabilises the bootstrap target. Trained 3000 episodes on CPU.",
+      "headline_stat": "30 eval games | avg 15.6 | best 24 | worst 9 | σ 4.2",
+      "bullets": [
+        "DQN CNN - Conv(8/4) -> Conv(4/2) -> Conv(3/1) -> FC(512) -> FC(4) over (4,84,84) stacked frames",
+        "replay buffer (100k) + target network synced every 1000 steps - the two tricks that make neural Q-learning converge",
+        "gamma=0.99, Adam lr=1e-4, batch 32, 10k warmup, epsilon decays 1.0 -> 0.1 over 100k env steps",
+        "Huber loss over MSE - caps gradient magnitude on large TD errors so outlier rewards don't blow up training"
+      ]
     }
   ]
 }
