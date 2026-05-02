@@ -43,6 +43,20 @@
         "gamma=0.99, Adam lr=1e-4, batch 32, 10k warmup, epsilon decays 1.0 -> 0.1 over 100k env steps",
         "Huber loss over MSE - caps gradient magnitude on large TD errors so outlier rewards don't blow up training"
       ]
+    },
+    {
+      "id": "4-dqn-breakout",
+      "number": 4,
+      "title": "Dueling Double DQN — Atari Breakout",
+      "summary": "Dueling CNN + Double DQN + Prioritized Replay + 4-step returns -> 27.9 avg over 50 games",
+      "description": "A Dueling Double DQN trained from raw Atari pixels with Prioritized Experience Replay and n-step returns. The shared CNN trunk splits into a Value head V(s) and Advantage head A(s,a), combined as Q = V + (A - mean A). Double DQN decouples action selection from evaluation to cut overestimation bias. A SumTree-backed PER buffer samples high-TD-error transitions more often, and 4-step returns propagate reward further back in time. Trained 70,001 episodes on Apple MPS.",
+      "headline_stat": "50 eval games | avg 27.9 | best 80 | worst 11 | σ 12.1",
+      "bullets": [
+        "Dueling CNN - shared Conv(8/4) -> Conv(4/2) -> Conv(3/1) trunk, split into Value head FC(512)->1 and Advantage head FC(512)->4",
+        "Double DQN - online net selects next action, target net evaluates it, removing max-bias overestimation",
+        "Prioritized Experience Replay - SumTree samples by |TD error|^0.6, IS weights (β: 0.4->1.0) correct the bias",
+        "4-step returns + gamma=0.99, Adam lr=1e-4, batch 32, 1M replay buffer, epsilon decays 1.0 -> 0.01 over 2M steps"
+      ]
     }
   ]
 }
